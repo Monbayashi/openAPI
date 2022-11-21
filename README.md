@@ -18,3 +18,7 @@ http://json-schema.org/understanding-json-schema/
 https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.2.md#dataTypes
 
 https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.2.md#schemaObject
+
+> Security
+
+https://swagger.io/docs/specification/authentication/

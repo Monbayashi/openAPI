@@ -29,6 +29,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomerPagedList'
+      security: [] # セキュリティが必要ないことを示す　※ただしツールなどを使った時に正しく動かない場合がある。
+      
     post:
       summary: New Customer
       description: Create a new customer
@@ -218,8 +220,21 @@ paths:
           description: Beer deleted
         '404':
           description: Not found
-          
+
+security:
+  - BasicAuth: []
+  - JwtAuthToken: []
+
 components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    JwtAuthToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   parameters:
     PageNumberQueryParam:
       name: pageNumber
@@ -309,7 +324,6 @@ components:
       properties:
         content:
           $ref: '#/components/schemas/CustomerList'
-
     Brewery:
       type: object
       properties:
@@ -349,7 +363,6 @@ components:
       properties:
         content:
           $ref: '#/components/schemas/BeerList'
-
     PagedResponse:
       type: object
       properties:
