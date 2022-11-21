@@ -8,3 +8,13 @@ https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.2.md#infoObj
 
 https://www.udemy.com/course/openapi-beginner-to-guru/
 
+
+> JSON Schema
+
+http://json-schema.org/understanding-json-schema/
+
+> OpenAPI Data Type & Schema Object
+
+https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.2.md#dataTypes
+
+https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.2.md#schemaObject
