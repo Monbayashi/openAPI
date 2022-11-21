@@ -14,6 +14,11 @@ servers:
 paths:
   /v1/customers:
     get:
+      summary: List Customers
+      description: Get a list of customers in the system
+      tags:
+        - Customers
+      operationId: listCustomersV1
       parameters:
         - $ref: '#/components/parameters/PageNumberQueryParam'
         - $ref: '#/components/parameters/PageSizeQueryParam'
@@ -24,17 +29,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomerPagedList'
+    post:
+      summary: New Customer
+      description: Create a new customer
+      tags:
+        - Customers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '201':
+          description: Customer Created
+          headers:
+            # 201のレスポンスではリクエストBodyは使用せずに headerのLocationに登録先のロケーションuriをヘッダーに入れて返信するのが一般的
+            location:
+              description: Location of the created customer
+              schema:
+                type: string
+                format: uri
+                example: http://example.com/v1/customers/{assigendIdValue}
+        '400':
+          description: Bad Request
+        '409':
+          description: Conflict
 
   /v1/customers/{customerId}:
     get:
+      summary: Get Customer by Id
+      description: Get a single ***Customer*** by its Id value.
+      tags:
+        - Customers
+      operationId: getCustomerByIdV1
       parameters:
-        - name: customerId
-          in: path
-          description: Customer Id
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/CustomerIdPathParam'
       responses:
         '200':
           description: Found Customer
@@ -42,9 +72,56 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Customer'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not found
+        '409':
+          description: Conflict
+    put:
+      summary: Update Customer
+      description: Update customer by id
+      tags:
+        - Customers
+      parameters:
+        - $ref: '#/components/parameters/CustomerIdPathParam'
+      operationId: putCustomerByIdV1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '204':
+          description: Customer Updated
+        '400':
+          description: Bad Request
+        '404':
+          description: Not found
+        '409':
+          description: Conflict
+    delete:
+      summary: Delete Customer by Id
+      description: Delete a single ***Customer*** by its Id value.
+      tags:
+        - Customers
+      operationId: deleteCustomerByIdV1
+      parameters:
+        - $ref: '#/components/parameters/CustomerIdPathParam'
+      responses:
+        '200':
+          description: Customer Deleted
+        '404':
+          description: Not found
 
   /v1/beers:
     get:
+      summary: List Beers
+      description: Get a list of beers in the system
+      tags:
+        - Beers
+      operationId: listBeersV1
       parameters:
         - $ref: '#/components/parameters/PageNumberQueryParam'
         - $ref: '#/components/parameters/PageSizeQueryParam'
@@ -57,17 +134,41 @@ paths:
                 $ref: '#/components/schemas/BeerPagedList'
         '404':
           description: No Beers Found
+    post:
+      summary: New Beer
+      description: Create a new Beer Object
+      tags:
+        - Beers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Beer'
+      responses:
+        '201':
+          description: Beer Created
+          headers:
+            Location:
+              description: Beer Object created
+              schema:
+                type: string
+                format: uri
+                example: http://example.com/v1/beer/{assigendIdValue}
+        '400':
+          description: Bad Request
+        '409':
+          description: Conflict
 
   /v1/beers/{beerId}:
     get:
+      summary: Get Beer by Id
+      description: Get a single ***Beer*** by its Id value.
+      tags:
+        - Beers
+      operationId: getBeerByIdV1
       parameters:
-        - name: beerId
-          in: path
-          description: Beer Id
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/BeerIdPathParam'
       responses:
         '200':
           description: Found Beer by Id
@@ -75,7 +176,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Beer'
-
+        '400':
+          description: Bad Request
+        '404':
+          description: Not found
+        '409':
+          description: Conflict
+    put:
+      summary: Update Beer
+      description: Update beer by id
+      tags:
+        - Beers
+      operationId: putBeerByIdV1
+      parameters:
+        - $ref: '#/components/parameters/BeerIdPathParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Beer'
+      responses:
+        '204':
+          description: Beer Updated
+        '400':
+          description: Bad Request
+        '404':
+          description: Not found
+        '409':
+          description: Conflict
+    delete:
+      summary: Delete Beer by Id
+      description: Delete a single ***Beer*** by its Id value.
+      tags:
+        - Beers
+      operationId: deleteBeerByIdV1
+      parameters:
+        - $ref: '#/components/parameters/BeerIdPathParam'
+      responses:
+        '200':
+          description: Beer deleted
+        '404':
+          description: Not found
+          
 components:
   parameters:
     PageNumberQueryParam:
@@ -96,6 +239,22 @@ components:
         type: integer
         format: int32
         default: 25
+    CustomerIdPathParam:
+      name: customerId
+      in: path
+      description: Customer Id
+      required: true
+      schema:
+        type: string
+        format: uuid
+    BeerIdPathParam:
+      name: beerId
+      in: path
+      description: Beer Id
+      required: true
+      schema:
+        type: string
+        format: uuid
 
   schemas:
     Address:
@@ -123,6 +282,7 @@ components:
         id:
           type: string
           format: uuid
+          readOnly: true #Get Postで使い分けることができる。
         firstName:
           type: string
           minLength: 2
@@ -164,6 +324,7 @@ components:
         id:
           type: string
           format: uuid
+          readOnly: true
         beerName:
           type: string
         style:
